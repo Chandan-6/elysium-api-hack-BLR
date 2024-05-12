@@ -5,7 +5,7 @@ from collections import defaultdict
 from sklearn.feature_extraction.text import TfidfVectorizer
 from scipy.sparse import issparse
 
-inv = pd.read_csv("inventory.csv")
+inv = pd.read_csv("investors.csv")
 project_df = pd.read_csv("projects.csv")
 
 
