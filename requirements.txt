@@ -6,4 +6,4 @@ pandas
 flask-pymongo
 flask-cors
 numpy
-sklearn
+scikit-learn
