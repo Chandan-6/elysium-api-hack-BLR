@@ -1,8 +1,8 @@
 import pandas as pd
 import numpy as np
 
-inv = pd.read_csv("investors.csv")
-project_df = pd.read_csv("projects.csv")
+inv = pd.read_csv("./inventory.csv")
+project_df = pd.read_csv("./projects.csv")
 
 
 def get_investor_similarities(project_description, investor_descriptions):
