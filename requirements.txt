@@ -1,0 +1,7 @@
+pymongo
+python-dotenv
+Flask
+gunicorn
+pandas
+Flask-pymongo
+Flask-cors

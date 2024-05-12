@@ -40,7 +40,3 @@ def check_login(email: str, password: str) -> bool:
             return True
 
     return False
-
-
-# conversion.csvToMongo("auth", 'auth', headers=['ID', 'Name', 'Email', 'Hash', 'Category'])
-# signed_up(email='Et@mail', name='het', category='investor')

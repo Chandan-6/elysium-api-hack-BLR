@@ -67,16 +67,3 @@ def mongoToCSV(collection_name, csv_file_path):
 
     except Exception as e:
         print(f"Error: {e}")
-
-# mongo_to_csv("investors", "./investors.csv")
-
-# print(f"Data from '{collection_name}' exported to '{csv_file_path}'.")
-
-
-# csvToMongo("investors.csv", "investors",
-#            headers=["name", "preference", "subPreference", "typeOfInvestment", "country", "description",
-#                     "pastInvestments", "proofOfValidation"])
-# csvToMongo("projects.csv", "projects",
-#            headers=["name", "project", "intro", "numberOfPeopleWorking", "projectCategory", "projectSubCategory",
-#                     "projectDescription", "bestAchievements", "proofLinks", "funding", "pitch", "ROI", "Country"
-#                     ])

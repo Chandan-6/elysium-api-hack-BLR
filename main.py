@@ -51,7 +51,7 @@ def register():
 @cross_origin()
 def login():
     try:
-        data = request.get_json()  # {email, password}
+        data = request.get_json()
         collection: pymongo.collection.Collection = db.auth
         registered = utils.signed_up(email=data['email'].lower())
         if not registered:
@@ -66,7 +66,7 @@ def login():
 @cross_origin()
 def investorInfo():
     try:
-        data = request.get_json()  # {pref, subPref, investmentType, country, description, pastInvestment, validation}
+        data = request.get_json()
         collection: pymongo.collection.Collection = db.investors
         final = {'ID': db.auth.count(), 'preferences': data['preferences'], 'subPreferences': data['subPreferences'],
                  'investmentType': data['investmentType'], 'country': data['country'],
@@ -82,7 +82,7 @@ def investorInfo():
 @cross_origin()
 def projectInfo():
     try:
-        data = request.get_json()  # {project, intro, teamSize, category, subCategory, description, bestAchievements, links, expectedFunding, pitch, expectedROI, country}
+        data = request.get_json()
         collection: pymongo.collection.Collection = db.projects
         final = {'ID': db.auth.count(), 'project': data['project'], 'intro': data['intro'],
                  'teamSize': data['teamSize'], 'category': data['category'], 'subCategory': data['subCategory'],
