@@ -5,8 +5,8 @@ from collections import defaultdict
 from sklearn.feature_extraction.text import TfidfVectorizer
 from scipy.sparse import issparse
 
-inv = pd.read_csv("./inventory.csv")
-project_df = pd.read_csv("./projects.csv")
+inv = pd.read_csv("inventory.csv")
+project_df = pd.read_csv("projects.csv")
 
 
 def get_investor_similarities(project_description, investor_descriptions):
@@ -64,3 +64,5 @@ for investor_idx, project_similarities in all_project_similarities.items():
     print(f"\nInvestor {investor_idx + 1} Similarities (Descending Order):")
     for project_idx, score in project_similarities.items():
         print(f"  Project {project_idx + 1}: {score}")  # Adjust for 1-based indexing
+
+def
