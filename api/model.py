@@ -65,4 +65,7 @@ for investor_idx, project_similarities in all_project_similarities.items():
     for project_idx, score in project_similarities.items():
         print(f"  Project {project_idx + 1}: {score}")  # Adjust for 1-based indexing
 
-def
+
+# def best_match_for_investor(investor_id: int):
+#     temp: dict = all_project_similarities[investor_id]
+#
