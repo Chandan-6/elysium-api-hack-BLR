@@ -109,4 +109,3 @@ def fetchAllProject():
 
     except Exception as e:
         print(e)
-
