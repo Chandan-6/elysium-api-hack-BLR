@@ -7,3 +7,4 @@ flask-pymongo
 flask-cors
 numpy
 scikit-learn
+scipy

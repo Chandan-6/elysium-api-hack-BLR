@@ -1,6 +1,10 @@
 import pandas as pd
 import numpy as np
 
+from collections import defaultdict
+from sklearn.feature_extraction.text import TfidfVectorizer
+from scipy.sparse import issparse
+
 inv = pd.read_csv("./inventory.csv")
 project_df = pd.read_csv("./projects.csv")
 
@@ -8,36 +12,55 @@ project_df = pd.read_csv("./projects.csv")
 def get_investor_similarities(project_description, investor_descriptions):
     """
   This function calculates the cosine similarity between a project description and multiple investor descriptions,
-  returning similarities in a nested array format.
+  returning a nested dictionary where outer keys are investor indices, and inner dictionaries contain all project indices
+  with corresponding similarity scores sorted in descending order.
 
   Args:
       project_description: The description of the project.
       investor_descriptions: A list of investor descriptions.
 
   Returns:
-      A nested list containing cosine similarity scores for each investor description compared to the project description.
+      A nested dictionary with outer keys as investor indices and inner dictionaries containing project indices
+      (sorted by descending similarity) as keys and corresponding similarity scores as values.
   """
     vectorizer = TfidfVectorizer()
-    tfidf = vectorizer.fit_transform([project_description] + investor_descriptions)
-    project_tfidf = tfidf[0]
-    investor_similarities = project_tfidf.dot(tfidf.T).toarray()[0][1:]
+    tfidf_matrix = vectorizer.fit_transform([project_description] + investor_descriptions)
+    project_tfidf = tfidf_matrix[0]
 
-    # Wrap investor_similarities in another list for nested structure
-    return [[investor_similarities]]  # Outer list contains similarities for one project
+    # Create a defaultdict to store similarities for each investor
+    all_similarities = defaultdict(dict)
+
+    # Calculate similarity for each investor
+    for investor_idx, investor_description in enumerate(investor_descriptions):
+        investor_tfidf = tfidf_matrix[investor_idx + 1]  # Skip project description (index 0)
+        investor_similarity = project_tfidf.dot(investor_tfidf.T)[0]
+        all_similarities[investor_idx][
+            investor_idx] = investor_similarity  # Add similarity for own project (may be non-zero)
+
+        # Calculate similarities for other projects
+        for project_idx in range(1, len(investor_descriptions)):
+            other_project_tfidf = tfidf_matrix[project_idx + 1]  # Skip project and own investor description
+            other_similarity = project_tfidf.dot(other_project_tfidf.T)[0]
+            all_similarities[investor_idx][project_idx] = other_similarity
+
+    # Sort similarities for each investor in descending order (based on similarity)
+    for investor_idx, project_similarities in all_similarities.items():
+        sorted_similarities = dict(sorted(project_similarities.items(), key=lambda item: item[1], reverse=True))
+        all_similarities[investor_idx] = sorted_similarities
+
+    return all_similarities  # Return nested dictionary containing sorted similarities for all investors
 
 
-# Example usage remains the same
+# Example usage (assuming project_df and investor_descriptions are available)
+all_project_similarities = {}
+for idx, project_row in project_df.iterrows():
+    project_description = project_row["project_description"]
+    investor_similarities = get_investor_similarities(project_description, investor_descriptions)
+    all_project_similarities.update(investor_similarities)  # Update with similarities for all projects
 
-
-def similarities(ID: int):
-    for idx, project_row in project_df.iterrows():
-        project_description = project_row["project_description"]
-        investor_similarities = get_investor_similarities(project_description, investor_descriptions)
-
-        # Access investor similarities for the current project: investor_similarities[0] (the first element in the outer list)
-        print(f"Similarities for project description (index {idx}): {investor_similarities[0]}")
-
-        # You can further iterate through investor_similarities[0] to access individual scores
-        for i in range(len(investor_similarities[0])):
-            print(f"Similarity for investor {i}: {investor_similarities[0][i]}")
-        return investor_similarities[0][ID]
+# Print the nested dictionary (sorted similarities)
+print("Nested Dictionary with Sorted Similarities:")
+for investor_idx, project_similarities in all_project_similarities.items():
+    print(f"\nInvestor {investor_idx + 1} Similarities (Descending Order):")
+    for project_idx, score in project_similarities.items():
+        print(f"  Project {project_idx + 1}: {score}")  # Adjust for 1-based indexing
