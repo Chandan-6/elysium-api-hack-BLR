@@ -100,8 +100,8 @@ def projectInfo():
 def fetchAllProject():
     data = request.get_json()
     try:
-        conversion.mongoToCSV('investors', './assets/investors.csv')
-        conversion.mongoToCSV('projects', './assets/projects.csv')
+        conversion.mongoToCSV('investors', 'api/investors.csv')
+        conversion.mongoToCSV('projects', 'api/projects.csv')
         similarity_array: list[float] = model.similarities(data['ID'])
         similarity_array.sort()
 
