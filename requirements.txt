@@ -3,5 +3,7 @@ python-dotenv
 Flask
 gunicorn
 pandas
-Flask-pymongo
-Flask-cors
+flask-pymongo
+flask-cors
+numpy
+sklearn

@@ -1,5 +1,6 @@
 import os
-from api import utils
+from api import utils, model
+from mongo import conversion
 
 import pymongo.collection
 
@@ -40,7 +41,7 @@ def register():
              'Type': data['category'].lower}
     if not utils.signed_up(name=data['name'].lower(), email=data['email'].lower(), category=data['category'].lower()):
         collection.insert_one(final)
-        return jsonify({'message': 'Registered Successfully!', 'category': data["category"], 'name': data["name"],
+        return jsonify({'message': 'Registered Successfully!', 'ID': count+1, 'category': data["category"], 'name': data["name"],
                         'email': data["email"]}), 201
 
     else:
@@ -57,7 +58,7 @@ def login():
         if not registered:
             return jsonify({'message': 'User Not registered!'}), 403
         elif utils.check_login(data['email'], data['password']):
-            return jsonify({'message': 'Login Successful!'}), 200
+            return jsonify({'message': 'Login Successful!', 'ID': data['ID']}), 200
     except Exception as e:
         return jsonify({'message': 'Error 500'}), 500
 
@@ -73,7 +74,7 @@ def investorInfo():
                  'description': data['description'], 'pastInvestments': data['pastInvestments'],
                  'validation': data['validation']}
         collection.insert_one(final)
-        return jsonify({'message': 'Investors Info Registered!'}), 201
+        return jsonify({'message': 'Investors Info Registered!', 'ID': data['ID']}), 201
     except Exception as e:
         return jsonify({'message': 'Error 500'}), 500
 
@@ -90,6 +91,22 @@ def projectInfo():
                  'links': data['links'], 'funding': data['expectedFunding'], 'pitch': data['pitch'],
                  'expectedROI': data['expectedROI'], 'country': data['country']}
         collection.insert_one(final)
-        return jsonify({'message': 'Project Info Registered!'}), 201
+        return jsonify({'message': 'Project Info Registered!', 'ID': data['ID']}), 201
     except Exception as e:
         return jsonify({'message': 'Error 500'}), 500
+
+
+@app.route("/api/fetchAllProject", methods=[POST])
+def fetchAllProject():
+    data = request.get_json()
+    try:
+        conversion.mongoToCSV('investors', './assets/investors.csv')
+        conversion.mongoToCSV('projects', './assets/projects.csv')
+        similarity_array: list[float] = model.similarities(data['ID'])
+        similarity_array.sort()
+
+        return jsonify({})
+
+    except Exception as e:
+        print(e)
+

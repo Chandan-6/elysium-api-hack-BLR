@@ -12,7 +12,7 @@ def sha256_encrypt(data) -> str:
     return sha256.hexdigest()
 
 
-def checker(data, digest) -> Bool:
+def checker(data, digest) -> bool:
     """
     Checks if the given data has the given SHA-256 hash.
     :param data: The data to be checked.
