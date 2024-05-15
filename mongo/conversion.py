@@ -67,3 +67,7 @@ def mongoToCSV(collection_name, csv_file_path):
 
     except Exception as e:
         print(f"Error: {e}")
+
+
+mongoToCSV("investors", "../assets/investors.csv")
+mongoToCSV("projects", "../assets/projects.csv")

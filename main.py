@@ -100,12 +100,14 @@ def projectInfo():
 def fetchAllProject():
     data = request.get_json()
     try:
-        conversion.mongoToCSV('investors', 'api/investors.csv')
-        conversion.mongoToCSV('projects', 'api/projects.csv')
-        similarity_array: list[float] = model.similarities(data['ID'])
-        similarity_array.sort()
-
-        return jsonify({})
+        conversion.mongoToCSV('investors', 'assets/investors.csv')
+        conversion.mongoToCSV('projects', 'assets/projects.csv')
+        projects = model.best_match_for_investor(investor_id=data['ID'])
+        final = {}
+        for project in projects:
+            temp = db.project.find_one({'ID': project})
+            final[project] = temp
+        return jsonify(final), 201
 
     except Exception as e:
         print(e)
